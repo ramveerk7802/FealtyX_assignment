@@ -1,7 +1,9 @@
 package com.rvcode.Fealtyxassignment.services;
 
 
+import com.rvcode.Fealtyxassignment.component.Validator;
 import com.rvcode.Fealtyxassignment.entities.Student;
+import com.rvcode.Fealtyxassignment.exceptionHandeller.MyCustomException;
 import com.rvcode.Fealtyxassignment.exceptionHandeller.StudentException;
 import com.rvcode.Fealtyxassignment.services.clients.OllamaFiegnClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ public class StudentService {
 
     @Autowired
     private OllamaFiegnClient ollamaFiegnClient;
+
+    @Autowired
+    private Validator validator;
     private int currentId=1;
     private Map<Integer, Student> studentMap = new HashMap<>();
 
@@ -30,6 +35,11 @@ public class StudentService {
 
     public Student addNewStudent(Student student){
         try {
+            if(student.getAge()<18)
+                throw new MyCustomException("Age must be greater than 18 years");
+            else if (!validator.emailValidator(student.getEmail())) {
+                throw new MyCustomException("Please enter the valid email");
+            }
             student.setId(currentId);
             studentMap.put(currentId,student);
             currentId++;
@@ -57,16 +67,15 @@ public class StudentService {
                 throw new StudentException("Student not found with id : "+ id);
             }
             Student dbStudent = studentMap.get(id);
-            if(!student.getName().isBlank())
+            if(student.getName()!=null && !student.getName().isBlank())
                 dbStudent.setName(student.getName());
-            if(student.getAge().intValue()!=0 && student.getAge().intValue()>=18)
+            if(student.getAge()!=null && student.getAge().intValue()>=18)
                 dbStudent.setAge(student.getAge());
 
-            if(!student.getEmail().isBlank())
+            if(student.getEmail()!=null && !student.getEmail().isBlank())
                 dbStudent.setEmail(student.getEmail());
-            studentMap.put(dbStudent.getId(),dbStudent);
-            return dbStudent;
-
+            studentMap.put(id,dbStudent);
+            return studentMap.get(id);
 
         }catch (Exception e) {
             throw e;
@@ -74,12 +83,12 @@ public class StudentService {
     }
 
 
-    public Student deleteStudentById(int id){
+    public String deleteStudentById(int id){
         try {
             if(!studentMap.containsKey(id))
                 throw new StudentException("Student not found with id:"+id);
-            Student dbStudent = studentMap.get(id);
-            return dbStudent;
+            studentMap.remove(id);
+            return "Student data deleted successfully with id: "+ id;
 
         }catch (Exception e){
             throw e;

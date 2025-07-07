@@ -14,4 +14,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
 
     }
+
+    @ExceptionHandler(MyCustomException.class)
+    public ResponseEntity<?> dataException(MyCustomException e){
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+    }
 }
