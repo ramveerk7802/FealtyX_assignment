@@ -1,6 +1,5 @@
 package com.rvcode.Fealtyxassignment.services.clients;
 
-import com.rvcode.Fealtyxassignment.entities.Student;
 import org.springframework.cloud.openfeign.FeignClient;
 
 import org.springframework.web.bind.annotation.PostMapping;

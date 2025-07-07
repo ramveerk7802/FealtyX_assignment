@@ -107,25 +107,15 @@ public class StudentService {
             }
 
 
-
             String prompt = """
-                            You are an AI assistant that writes formal summaries of student profiles for academic records.
-                            Your task is to generate a well-structured summary in 4 to 5 full sentences.
-                            Use a professional tone. Include the student’s name, age, email, and any other observations based on the provided data.
-
-                            Student Details:
-                            - ID: %d
-                            - Name: %s
-                            - Age: %d
-                            - Email: %s
-
-                            Write a paragraph summarizing this student's profile.
-                            """.formatted(
-                            dbStudent.getId(),
-                            dbStudent.getName(),
-                            dbStudent.getAge(),
-                            dbStudent.getEmail()
-                             );
+                Summarize this student’s profile in 4–5 professional sentences: 
+                Name: %s, Age: %d, Email: %s, ID: %d
+                """.formatted(
+                    dbStudent.getName(),
+                    dbStudent.getAge(),
+                    dbStudent.getEmail(),
+                    dbStudent.getId()
+                 );
 
 
             Map<String,Object> request = new HashMap<>();
